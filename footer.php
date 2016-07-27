@@ -12,6 +12,7 @@
 
 	<footer id="colophon" class="site-footer" role="contentinfo">
 		<div class="site-info">
+<?php echo do_shortcode('[google-translator]'); ?>
 		</div><!-- .site-info -->
 	</footer><!-- .site-footer -->
 

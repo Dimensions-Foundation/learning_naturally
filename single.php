@@ -7,7 +7,7 @@
 
 get_header(); ?>
 
-<div id="page-wrapper" class="">
+<main>
   <?php
 		// Start the loop.
 		while ( have_posts() ) : the_post(); ?>
@@ -28,6 +28,6 @@ get_header(); ?>
 <!-- .content-area -->
 
 
-</div>
+</main>
 
 <?php get_footer(); ?>

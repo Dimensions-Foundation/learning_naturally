@@ -79,5 +79,67 @@ register_nav_menus(array( 'primary-nav' => __( 'Primary Menu')));
 				}
 			}
 
+// WP Member
+
+add_filter( 'authenticate', 'my_login_with_email', 10, 3 );
+function my_login_with_email( $user=null, $username, $password ){
+
+    // First, check by username.
+    $user = get_user_by( 'login', $username );
+
+    // If the username is invalid, check by email.
+    if( ! $user ) {
+        $user = get_user_by( 'email', $username );
+    }
+
+    // Validate the password.
+    if( $user ) {
+        if( wp_check_password( $password, $user->user_pass ) ) {
+            // If password checks out, return a valid login.
+            return $user;
+        }
+    }
+
+    // Return a failed login.
+    return new WP_Error( 'login', "Login Failed" );
+}
+
+add_filter( 'wpmem_inc_login_inputs', 'my_login_with_email_form' );
+function my_login_with_email_form( $array ){
+    $array[0]['name'] = 'Email or Username';
+    return $array;
+}
+
+add_filter( 'wpmem_sidebar_form', 'my_login_with_email_sidebar' );
+function my_login_with_email_sidebar( $string ){
+    return str_replace( '>Username<', '>Email or Username<', $string );
+}
+
+
+add_filter( 'wpmem_inc_resetpassword_inputs', 'my_pwd_reset_inputs' );
+function my_pwd_reset_inputs( $args ) {
+    unset( $args[0] );
+    return $args;
+}
+
+add_filter( 'wpmem_pwdreset_args', 'my_pwd_reset_args' );
+function my_pwd_reset_args( $args ) {
+    if( isset( $_POST['email'] ) ) {
+        $user = get_user_by( 'email', trim( $_POST['email'] ) );
+    } else {
+        $user = false;
+    }
+
+    if( $user ) {
+        $return_array = array(
+            'user' => $user->user_login,
+            'email' => $_POST['email']
+        );
+    } else {
+        $return_array = array( 'user' => '', 'email' => '' );
+    }
+
+    return $return_array;
+}
 
 	?>

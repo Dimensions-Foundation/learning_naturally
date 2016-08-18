@@ -14,4 +14,4 @@ get_header(); ?>
 
 <!-- .content-area -->
 
-<?php get_footer(); ?>
+<?php get_footer('home'); ?>
